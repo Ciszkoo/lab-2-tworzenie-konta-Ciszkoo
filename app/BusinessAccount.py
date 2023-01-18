@@ -10,8 +10,7 @@ def nip_processing(nip: str) -> str:
         if BusinessAccount.is_nip_valid(nip):
             return nip
         return "Pranie!"
-    else:
-        return "Niepoprawny NIP!"
+    return "Niepoprawny NIP!"
 
 
 class BusinessAccount(Account):

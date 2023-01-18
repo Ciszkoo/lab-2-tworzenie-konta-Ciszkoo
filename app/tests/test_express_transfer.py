@@ -3,6 +3,7 @@ from unittest.mock import patch, Mock
 
 from ..BusinessAccount import BusinessAccount
 from ..Account import Account
+from parameterized import parameterized
 
 
 class TestExpressTransfer(unittest.TestCase):
@@ -15,24 +16,17 @@ class TestExpressTransfer(unittest.TestCase):
     def _mock_response(self, status):
         return Mock(status_code=status)
 
-    def test_express_transfer_normal_account(self):
+    @parameterized.expand([
+        (100, 100, -1, "Prowizja za przelew ekspresowy nie zostala pobrana!"),
+        (100, 101, 100, "Przelew ekspresowy zostal zaksiegowany mimo braku srodkow!"),
+    ])
+    def test_express_transfer_normal_account(self, balance, amount, expected_balance, message):
         account = Account(self.name, self.surname, self.pesel)
-        account.balance = 100
-        account.express_transfer(100)
+        account.balance = balance
+        account.express_transfer(amount)
 
         self.assertEqual(
-            account.balance, -1, "Prowizja za przelew ekspresowy nie zostala pobrana!"
-        )
-
-    def test_express_transfer_normal_account_not_enough_money(self):
-        account = Account(self.name, self.surname, self.pesel)
-        account.balance = 100
-        account.express_transfer(101)
-
-        self.assertEqual(
-            account.balance,
-            100,
-            "Przelew ekspresowy zostal zaksiegowany mimo braku srodkow!",
+            account.balance, expected_balance, message
         )
 
     @patch('requests.get')
