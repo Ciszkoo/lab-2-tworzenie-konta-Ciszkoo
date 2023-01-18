@@ -1,6 +1,6 @@
 import unittest
-
 from ..Account import Account
+from parameterized import parameterized
 
 
 class TestPostingTransfers(unittest.TestCase):
@@ -15,18 +15,15 @@ class TestPostingTransfers(unittest.TestCase):
 
         self.assertEqual(account.balance, 800, "Srodki nie zostaly dodane!")
 
-    def test_outgoing_transfer_with_not_enough_money(self):
+    @parameterized.expand([
+        (300, 500, 300, "Srodki zostaly odjete mimo braku funduszy na koncie!"),
+        (1000, 500, 500, "Srodki nie zostaly wyjete z konta!"),
+    ])
+    def test_outgoing_transfer_with_not_enough_money(self, balance, amount, expected_balance, message):
         account = Account(self.name, self.surname, self.pesel)
-        account.balance = 300
-        account.outgoing_transfer(500)
+        account.balance = balance
+        account.outgoing_transfer(amount)
 
         self.assertEqual(
-            account.balance, 300, "Srodki zostaly odjete mimo braku funduszy na koncie!"
+            account.balance, expected_balance, message
         )
-
-    def test_outgoing_transfer_with_enough_money(self):
-        account = Account(self.name, self.surname, self.pesel)
-        account.balance = 1000
-        account.outgoing_transfer(500)
-
-        self.assertEqual(account.balance, 500, "Srodki nie zostaly wyjete z konta!")

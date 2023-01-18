@@ -7,15 +7,13 @@ from app.SMTPConnection import SMTPConnection
 def pesel_processing(pesel):
     if len(pesel) == 11:
         return pesel
-    else:
-        return "Niepoprawny PESEL!"
+    return "Niepoprawny PESEL!"
 
 
 def is_promo_code_wrong(promo_code):
     if promo_code is None or re.fullmatch("^PROM-.{3}$", promo_code) is None:
         return True
-    else:
-        return False
+    return False
 
 
 def is_senior(pesel):
@@ -28,15 +26,13 @@ def is_senior(pesel):
         or (year_prefix <= 12 and year_suffix < 61)
     ):
         return True
-    else:
-        return False
+    return False
 
 
 def initial_balance(pesel, promo_code):
     if is_promo_code_wrong(promo_code) or is_senior(pesel):
         return 0
-    else:
-        return 50
+    return 50
 
 
 def isLoanAvailable(history, amount):

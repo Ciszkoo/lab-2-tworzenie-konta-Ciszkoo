@@ -78,6 +78,7 @@ class TestTransferHistory(unittest.TestCase):
             [],
             "Historia transakcji dla nowego konta biznesowego nie jest pusta!",
         )
+
     @patch('requests.get')
     def test_history_incoming_transfer_business_account(self, mock_get):
         mock_response = self._mock_response(200)
@@ -89,6 +90,7 @@ class TestTransferHistory(unittest.TestCase):
             [100],
             "Przelew przychodzacy nie zostal wpisany do historii!",
         )
+
     @patch('requests.get')
     def test_history_outgoing_transfer_business_account(self, mock_get):
         mock_response = self._mock_response(200)
@@ -129,7 +131,6 @@ class TestTransferHistory(unittest.TestCase):
             "Historia przelewow nie jest poprawna!",
         )
 
-
     # Sending mail history
 
     def test_send_mail_history_normal_account(self):
@@ -140,9 +141,10 @@ class TestTransferHistory(unittest.TestCase):
         account.balance = 1000
         account.outgoing_transfer(100)
         smtp_connector = SMTPConnection()
-        smtp_connector.send_mail = MagicMock(return_value = True)
+        smtp_connector.send_mail = MagicMock(return_value=True)
         status = account.send_mail_history("pawel@gmail.com", smtp_connector)
-        self.assertTrue(status, "Wysylanie historii przelewow nie powiodlo sie!")
+        self.assertTrue(
+            status, "Wysylanie historii przelewow nie powiodlo sie!")
         smtp_connector.send_mail.assert_called_once_with(title, content, mail)
 
     def test_send_mail_history_normal_account_failed(self):
@@ -153,7 +155,7 @@ class TestTransferHistory(unittest.TestCase):
         account.balance = 1000
         account.outgoing_transfer(100)
         smtp_connector = SMTPConnection()
-        smtp_connector.send_mail = MagicMock(return_value = False)
+        smtp_connector.send_mail = MagicMock(return_value=False)
         status = account.send_mail_history(mail, smtp_connector)
         self.assertFalse(status, "Wysylanie historii przelewow powiodlo sie!")
         smtp_connector.send_mail.assert_called_once_with(title, content, mail)
@@ -169,9 +171,10 @@ class TestTransferHistory(unittest.TestCase):
         account.balance = 1000
         account.outgoing_transfer(100)
         smtp_connector = SMTPConnection()
-        smtp_connector.send_mail = MagicMock(return_value = True)
+        smtp_connector.send_mail = MagicMock(return_value=True)
         status = account.send_mail_history("pawel@gmail.com", smtp_connector)
-        self.assertTrue(status, "Wysylanie historii przelewow nie powiodlo sie!")
+        self.assertTrue(
+            status, "Wysylanie historii przelewow nie powiodlo sie!")
         smtp_connector.send_mail.assert_called_once_with(title, content, mail)
 
     @patch('requests.get')
@@ -185,7 +188,7 @@ class TestTransferHistory(unittest.TestCase):
         account.balance = 1000
         account.outgoing_transfer(100)
         smtp_connector = SMTPConnection()
-        smtp_connector.send_mail = MagicMock(return_value = False)
+        smtp_connector.send_mail = MagicMock(return_value=False)
         status = account.send_mail_history("pawel@gmail.com", smtp_connector)
         self.assertFalse(status, "Wysylanie historii przelewow powiodlo sie!")
         smtp_connector.send_mail.assert_called_once_with(title, content, mail)
